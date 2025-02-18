@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgIf } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Movie } from '../../../core/models/movie.model';
@@ -8,6 +8,7 @@ import { addMovie } from '../../../store/watchlist/watchlist.acrion';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { RemoveAfterColonPipe } from "../../../core/pipes/remove-after-colon.pipe";
 
 @Component({
   selector: 'app-movie-detail',
@@ -16,10 +17,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   styleUrls: ['./movie-detail.component.scss'],
   imports: [
     NgIf,
+    CommonModule,
     MatCardModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-  ]
+    RemoveAfterColonPipe
+]
 })
 export class MovieDetailComponent implements OnInit {
   movie!: Movie;

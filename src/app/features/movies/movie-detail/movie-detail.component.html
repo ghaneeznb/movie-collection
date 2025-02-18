@@ -1,18 +1,18 @@
 <div *ngIf="loading" class="loading-container">
-  <mat-spinner color="accent"></mat-spinner>
+  <mat-spinner class="loading-container"></mat-spinner>
 </div>
 
 <div *ngIf="!loading && movie" class="movie-container">
   <mat-card class="movie-card">
-    <mat-card-header>
-      <mat-card-title>{{ movie.Title }}</mat-card-title>
-      <mat-card-subtitle>{{ movie.Year }}</mat-card-subtitle>
-    </mat-card-header>
-    <img mat-card-image [src]="movie.Poster" alt="{{ movie.Title }}" />
+    <div class="image-container">
+      <img mat-card-image [src]="movie.Poster !== 'N/A' ? movie.Poster : 'assets/no-image.png'" alt="{{ movie.Title }} poster" class="image">
+      <mat-card-subtitle class="text-overlay">{{ movie.Year }} • {{ movie.Type | titlecase }}</mat-card-subtitle>
+    </div>
     <mat-card-content>
-      <p>{{ movie.Plot }}</p>
+      <mat-card-title class="my-2 text-light">{{ movie.Title | removeAfterColon }}</mat-card-title>
+      <p class="text-light movie-discription">{{ movie.Plot }}</p>
     </mat-card-content>
-    <mat-card-actions>
+    <mat-card-actions class="d-flex justify-content-end mb-2">
       <button mat-raised-button color="primary" (click)="addToWatchlist()">
         Add to Watchlist
       </button>

@@ -4,11 +4,12 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { Movie } from '../../core/models/movie.model';
+import { RemoveAfterColonPipe } from "../../core/pipes/remove-after-colon.pipe";
 
 @Component({
   selector: 'app-movie-card',
   standalone: true,
-  imports: [RouterModule, CommonModule, MatCardModule, MatButtonModule], 
+  imports: [RouterModule, CommonModule, MatCardModule, MatButtonModule, RemoveAfterColonPipe], 
   templateUrl: './movie-card.component.html',
   styleUrl: './movie-card.component.scss'
 })

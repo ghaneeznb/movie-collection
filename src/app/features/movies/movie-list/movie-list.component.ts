@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-movie-list',
@@ -22,6 +23,7 @@ import { FormsModule } from '@angular/forms';
     MatInputModule,
     MatProgressSpinnerModule,
     FormsModule,
+    MatIconModule,
     MovieCardComponent
   ],
 })

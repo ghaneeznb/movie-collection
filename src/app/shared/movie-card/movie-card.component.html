@@ -1,11 +1,10 @@
 <mat-card class="movie-card">
-  <mat-card-header>
-    <mat-card-title>{{ movie.Title }}</mat-card-title>
-    <mat-card-subtitle>{{ movie.Year }} • {{ movie.Type | titlecase }}</mat-card-subtitle>
-  </mat-card-header>
-
-  <img mat-card-image [src]="movie.Poster !== 'N/A' ? movie.Poster : 'assets/no-image.png'" alt="{{ movie.Title }} poster" />
-
+  <div class="image-container">
+    <img mat-card-image [src]="movie.Poster !== 'N/A' ? movie.Poster : 'assets/no-image.png'" alt="{{ movie.Title }} poster" class="image">
+    <mat-card-subtitle class="text-overlay">{{ movie.Year }} • {{ movie.Type | titlecase }}</mat-card-subtitle>
+  </div>
+ 
+  <mat-card-title class="my-2 text-light text-center">{{ movie.Title | removeAfterColon }}</mat-card-title>
   <mat-card-actions class="actions">
     <button mat-button color="primary" [routerLink]="[movie.imdbID]">Details</button>
     <button mat-button color="accent" (click)="addToWatchlist()">Add to Watchlist</button>

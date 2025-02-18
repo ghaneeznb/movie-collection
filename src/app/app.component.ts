@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { MenuComponent } from './shared/menu/menu/menu.component';
+import { MenuComponent } from './shared/menu/menu.component';
 
 
 
