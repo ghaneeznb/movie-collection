@@ -1,1 +1,21 @@
-<p>movie-detail works!</p>
+<div *ngIf="loading" class="loading-container">
+  <mat-spinner color="accent"></mat-spinner>
+</div>
+
+<div *ngIf="!loading && movie" class="movie-container">
+  <mat-card class="movie-card">
+    <mat-card-header>
+      <mat-card-title>{{ movie.Title }}</mat-card-title>
+      <mat-card-subtitle>{{ movie.Year }}</mat-card-subtitle>
+    </mat-card-header>
+    <img mat-card-image [src]="movie.Poster" alt="{{ movie.Title }}" />
+    <mat-card-content>
+      <p>{{ movie.Plot }}</p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" (click)="addToWatchlist()">
+        Add to Watchlist
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

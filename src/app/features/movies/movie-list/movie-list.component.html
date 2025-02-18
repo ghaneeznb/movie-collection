@@ -1,1 +1,22 @@
-<p>movie-list works!</p>
+<div class="container">
+  <h2>Search Movies</h2>
+
+  <mat-form-field class="search-bar">
+    <mat-label>Search for a movie</mat-label>
+    <input matInput [(ngModel)]="query" (keyup.enter)="fetchMovies()" />
+    <button mat-raised-button (click)="fetchMovies()">Search</button>
+  </mat-form-field>
+
+  <mat-spinner *ngIf="loading"></mat-spinner>
+
+  <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+  <div *ngIf="movies.length > 0; else noResults">
+    <div class="row movie-list">
+      <app-movie-card *ngFor="let movie of movies" [movie]="movie"></app-movie-card>
+    </div>
+  </div>
+
+  <ng-template #noResults>
+    <p class="no-movies">No movies found. Try searching for another title.</p>
+  </ng-template>
+</div>

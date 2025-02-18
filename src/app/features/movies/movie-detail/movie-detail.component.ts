@@ -1,11 +1,60 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { NgIf } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { Movie } from '../../../core/models/movie.model';
+import { MovieService } from '../../../core/services/movie.service';
+import { addMovie } from '../../../store/watchlist/watchlist.acrion';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-movie-detail',
-  imports: [],
+  standalone: true,
   templateUrl: './movie-detail.component.html',
-  styleUrl: './movie-detail.component.scss'
+  styleUrls: ['./movie-detail.component.scss'],
+  imports: [
+    NgIf,
+    MatCardModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+  ]
 })
-export class MovieDetailComponent {
+export class MovieDetailComponent implements OnInit {
+  movie!: Movie;
+  loading = false;
 
+  constructor(
+    private route: ActivatedRoute,
+    private movieService: MovieService,
+    private store: Store
+  ) {}
+
+  ngOnInit(): void {
+    const imdbID = this.route.snapshot.paramMap.get('id');
+    if (imdbID) {
+      this.fetchMovieDetails(imdbID);
+    }
+  }
+
+  fetchMovieDetails(imdbID: string): void {
+    this.loading = true;
+    this.movieService.getMovieDetails(imdbID).subscribe({
+      next: (data) => {
+        this.movie = data;
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.loading = false;
+      }
+    });
+  }
+
+  addToWatchlist(): void {
+    if (this.movie) {
+      this.store.dispatch(addMovie({ movie: this.movie }));
+    }
+  }
 }

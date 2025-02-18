@@ -1,59 +1,34 @@
-# MovieCollection
+# Movie Collection Browser
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.7.
+A modern Angular application for browsing movies, viewing details, and managing a personal watchlist. Built with **Angular Standalone Components**, **NgRx for state management**, and **lazy-loaded routes** for efficiency.
 
-## Development server
+---
 
-To start a local development server, run:
+## Features
 
-```bash
-ng serve
-```
+### Movie List
+- Fetch movies from **TMDb API** or **OMDb API**.
+- Display **title, release year, genre, and poster**.
+- Search & filter movies by title or genre (**Bonus**).
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### Movie Detail View
+- Navigate to a **detailed page** with a movie synopsis, rating, and cast.
+- Uses **Angular Router** for deep linking.
 
-## Code scaffolding
+### Watchlist (State Management with NgRx)
+- Add/remove movies to a personal watchlist.
+- Uses **NgRx Store** for state management.
+- **Persisted in local storage** for session retention.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Reusable Components
+- **Movie Card** (Used in Movie List and Watchlist).
+- **Button Component** (For adding/removing movies).
+- **Loading Spinner** (For async operations).
 
-```bash
-ng generate component component-name
-```
+### Testing
+- **Unit Tests**: Written using **Jest** for services, components, and NgRx store.
+- **E2E Tests**: Using **Cypress** to validate user interactions.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+ ### Author
+Zeynab Ghane | (https://github.com/ghaneeznb)
 
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
