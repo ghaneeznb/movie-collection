@@ -1,6 +1,6 @@
 <div class="container-floid">
 
-  <div class="row d-flex align-items-center justify-content-center my-2 gx-0">
+  <div class="row d-flex align-items-center justify-content-center my-5 gx-0">
     <div class="search-bar d-flex align-items-center justify-content-center pt-4">
       <mat-form-field class="col-md-10 col-lg-10">
         <mat-label>Search for a movie</mat-label>
@@ -20,6 +20,8 @@
       <app-movie-card class="col-2 mb-4" *ngFor="let movie of movies" [movie]="movie"></app-movie-card>
     </div>
   </ng-container>
+
+  {{movies|json}}
 
   <ng-template #noResults>
     <p class="no-movies">No movies found. Try searching for another title.</p>

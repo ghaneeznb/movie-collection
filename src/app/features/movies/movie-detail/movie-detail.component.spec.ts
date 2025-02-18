@@ -22,8 +22,6 @@ describe('MovieDetailComponent', () => {
     Genre: 'Action',
     Poster: 'https://example.com/poster.jpg',
     Plot: 'A test movie plot',
-    Director: 'Test Director',
-    Actors: 'Actor1, Actor2',
   };
 
   beforeEach(async () => {

@@ -10,3 +10,8 @@ export const removeMovie = createAction(
   '[Watchlist] Remove Movie',
   props<{ imdbID: string }>()
 );
+
+export const rateMovie = createAction(
+  '[Watchlist] Rate Movie',
+  props<{ imdbID: string, rating: number }>()
+);

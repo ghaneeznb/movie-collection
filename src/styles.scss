@@ -8,4 +8,8 @@ html {
     typography: Roboto,
     density: 0
   ));
+
+  .mat-mdc-text-field-wrapper{
+    border-radius: 16px !important;
+  }
 }
