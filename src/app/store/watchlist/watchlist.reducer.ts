@@ -21,12 +21,6 @@ const _watchlistReducer = createReducer(
   on(removeMovie, (state, { imdbID }) => ({
     ...state,
     movies: state.movies.filter(movie => movie.imdbID !== imdbID)
-  })),
-  on(rateMovie, (state, { imdbID, rating }) => ({
-    ...state,
-    movies: state.movies.map(movie =>
-      movie.imdbID === imdbID ? { ...movie, Rating: rating } : movie
-    )
   }))
 );
 

@@ -11,30 +11,14 @@
   </mat-card-actions>
 </mat-card> -->
 
-<div class="movie-card bg-gray-800 text-white rounded-xl shadow-lg transform transition-transform hover:scale-105 max-w-[450px]">
-  <div class="relative w-full h-[350px] rounded-t-xl overflow-hidden">
-    <img 
-      [src]="movie.Poster !== 'N/A' ? movie.Poster : 'assets/no-image.png'" 
-      alt="{{ movie.Title }} poster" 
-      class="absolute top-0 left-0 w-full h-full object-cover"
-    />
-    <span class="absolute top-3 right-3 bg-black bg-opacity-80 text-white px-3 py-1 rounded-md text-sm font-semibold">
-      {{ movie.Year }} • {{ movie.Type | titlecase }}
-    </span>
+<div class="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:space-y-0">
+  <div class="group relative">
+    <img [src]="movie.Poster !== 'N/A' ? movie.Poster : 'assets/no-image.png'" [routerLink]="[movie.imdbID]" alt="{{ movie.Title }} poster" class="w-full rounded-lg bg-white object-cover group-hover:opacity-75 max-sm:h-80 sm:aspect-2/1 lg:aspect-square">
+    <h3 class="mt-6 text-sm text-gray-500">
+      <a href="#">
+        <span class="absolute inset-0"></span>
+        {{ movie.Year }} • {{ movie.Type | titlecase }}
+      </a>
+    </h3>
+    <p class="text-base font-semibold text-gray-900">{{movie.Title | removeAfterColon}}</p>
   </div>
-
-  <h3 class="my-3 text-lg font-semibold text-center px-4">{{ movie.Title | removeAfterColon }}</h3>
-
-  <div class="flex justify-between px-4 py-3">
-    <button 
-      class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition"
-      [routerLink]="[movie.imdbID]">
-      Details
-    </button>
-    <button 
-      class="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-md transition"
-      (click)="addToWatchlist()">
-      Add to Watchlist
-    </button>
-  </div>
-</div>

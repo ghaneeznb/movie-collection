@@ -6,6 +6,22 @@
       *ngFor="let movie of watchlist"
       [movie]="movie"
       (remove)="removeFromWatchlist(movie.imdbID)">
+      
+      <div class="flex justify-end space-x-2 mt-4">
+        <button
+          *ngIf="!isInWatchlist(movie)"
+          class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+          (click)="addToWatchlist(movie)">
+          Add to Watchlist
+        </button>
+
+        <button
+          *ngIf="isInWatchlist(movie)"
+          class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+          (click)="removeFromWatchlist(movie.imdbID)">
+          Remove from Watchlist
+        </button>
+      </div>
     </app-movie-card>
   </div>
 
