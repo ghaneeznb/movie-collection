@@ -1,39 +1,28 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule, NgFor, NgIf } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { Movie } from '../../../core/models/movie.model';
+import { addMovie, removeMovie } from '../../../store/watchlist/watchlist.acrion';
+import { selectWatchlistMovies } from '../../../store/watchlist/watchlist.selector';
 import { MovieService } from '../../../core/services/movie.service';
 import { MovieCardComponent } from '../../../shared/movie-card/movie-card.component';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-movie-list',
   templateUrl: './movie-list.component.html',
+  imports: [MovieCardComponent, NgIf, FormsModule, NgFor ],
   standalone: true,
-  styleUrls: ['./movie-list.component.scss'],
-  imports: [
-    CommonModule,
-    NgFor,
-    NgIf,
-    MatCardModule,
-    MatButtonModule,
-    MatInputModule,
-    MatProgressSpinnerModule,
-    FormsModule,
-    MatIconModule,
-    MovieCardComponent
-  ],
+  styleUrls: ['./movie-list.component.scss']
 })
 export class MovieListComponent implements OnInit {
-  movies: any[] = [];
-  loading = false;
-  query = 'Marvel';
-  errorMessage = '';
+  movies: Movie[] = [];
+  query: string = 'Marvel';
+  loading: boolean = false;
+  errorMessage: string = '';
 
-  constructor(private movieService: MovieService) {}
+  constructor(private store: Store, private movieService: MovieService) {}
 
   ngOnInit(): void {
     this.fetchMovies();
@@ -44,7 +33,7 @@ export class MovieListComponent implements OnInit {
 
     this.loading = true;
     this.errorMessage = '';
-
+    
     this.movieService.getMovies(this.query).subscribe({
       next: (response) => {
         this.movies = response.Search || [];

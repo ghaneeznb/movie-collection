@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Movie } from '../../../core/models/movie.model';
@@ -18,6 +18,10 @@ import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 export class WatchlistComponent implements OnInit {
   watchlist$!: Observable<Movie[]>;
   moviesInWatchlist: Movie[] = [];
+  movie!: Movie;
+  @Input() isInWatchlist = false;
+  @Output() addToWatchlist = new EventEmitter<Movie>();
+  @Output() removeFromWatchlist = new EventEmitter<string>();
 
   constructor(private store: Store) {}
 
@@ -28,17 +32,7 @@ export class WatchlistComponent implements OnInit {
     });
   }
 
-  addToWatchlist(movie: Movie): void {
-    if (!this.isInWatchlist(movie)) {
-      this.store.dispatch(addMovie({ movie }));
-    }
-  }
-
-  removeFromWatchlist(imdbID: string): void {
-    this.store.dispatch(removeMovie({ imdbID }));
-  }
-
-  isInWatchlist(movie: Movie): boolean {
-    return this.moviesInWatchlist.some(m => m.imdbID === movie.imdbID);
+  removeMovie(imdbID: string): void {
+    this.moviesInWatchlist = this.moviesInWatchlist.filter(movie => movie.imdbID !== imdbID);
   }
 }

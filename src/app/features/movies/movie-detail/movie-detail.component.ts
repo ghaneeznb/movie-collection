@@ -1,14 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Movie } from '../../../core/models/movie.model';
 import { MovieService } from '../../../core/services/movie.service';
-import { addMovie } from '../../../store/watchlist/watchlist.acrion';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { addMovie, removeMovie } from '../../../store/watchlist/watchlist.acrion';
 import { RemoveAfterColonPipe } from "../../../core/pipes/remove-after-colon.pipe";
+import { selectWatchlistMovies } from '../../../store/watchlist/watchlist.selector';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-movie-detail',
@@ -18,15 +17,15 @@ import { RemoveAfterColonPipe } from "../../../core/pipes/remove-after-colon.pip
   imports: [
     NgIf,
     CommonModule,
-    MatCardModule,
-    MatButtonModule,
-    MatProgressSpinnerModule,
     RemoveAfterColonPipe
 ]
 })
 export class MovieDetailComponent implements OnInit {
   movie!: Movie;
   loading = false;
+  @Input() isInWatchlist = false;
+  watchlist$!: Observable<Movie[]>;
+  moviesInWatchlist: Movie[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -39,6 +38,7 @@ export class MovieDetailComponent implements OnInit {
     if (imdbID) {
       this.fetchMovieDetails(imdbID);
     }
+    this.checkWatchlist();
   }
 
   fetchMovieDetails(imdbID: string): void {
@@ -55,9 +55,30 @@ export class MovieDetailComponent implements OnInit {
     });
   }
 
+  checkWatchlist(){
+    this.watchlist$ = this.store.select(selectWatchlistMovies);
+    this.watchlist$.subscribe((movies: Movie[]) => {
+      this.moviesInWatchlist = movies;
+      this.isInWatchlist = movies.some(movie => movie.imdbID === this.movie?.imdbID);
+    });
+  }
+
+  handleWatchlistAction(): void {
+    const imdbID = this.route.snapshot.paramMap.get('id');
+    if (this.isInWatchlist && imdbID) {
+      this.removeFromWatchlist(imdbID);
+    } else {
+      this.addToWatchlist() 
+    }
+  }
+
   addToWatchlist(): void {
     if (this.movie) {
       this.store.dispatch(addMovie({ movie: this.movie }));
     }
+  }
+  
+  removeFromWatchlist(imdbID: string): void {
+    this.store.dispatch(removeMovie({ imdbID }));
   }
 }

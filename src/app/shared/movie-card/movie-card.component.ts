@@ -1,11 +1,11 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { Movie } from '../../core/models/movie.model';
 import { RemoveAfterColonPipe } from "../../core/pipes/remove-after-colon.pipe";
 import { Store } from '@ngrx/store';
-import { addMovie } from '../../store/watchlist/watchlist.acrion';
+import { addMovie, removeMovie } from '../../store/watchlist/watchlist.acrion';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -17,15 +17,11 @@ import { RouterModule } from '@angular/router';
 })
 export class MovieCardComponent {
   @Input() movie!: Movie;
-  @Output() watchList = new EventEmitter<void>();
+  @Input() watchlist = false;
+  @Output() remove = new EventEmitter<string>();
 
-  constructor(
-    private store: Store
-  ){}
-
-  addToWatchlist(): void {
-    if (this.movie) {
-      this.store.dispatch(addMovie({ movie: this.movie }));
-    }
+  removeMovie() {
+    this.remove.emit(this.movie.imdbID);
   }
+  
 }

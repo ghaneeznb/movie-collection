@@ -1,30 +1,4 @@
-<!-- <div class="container-floid">
 
-  <div class="row d-flex align-items-center justify-content-center my-5 gx-0">
-    <div class="search-bar d-flex align-items-center justify-content-center pt-4">
-      <mat-form-field class="col-md-10 col-lg-10">
-        <mat-label>Search for a movie</mat-label>
-        <input matInput [(ngModel)]="query" (keyup.enter)="fetchMovies()" />
-      </mat-form-field>
-      <button mat-fab class="" (click)="fetchMovies()" style="margin-bottom: 20px;">
-        <mat-icon fontIcon="search"></mat-icon>
-      </button>
-    </div>
-  </div>
-
-  <mat-spinner *ngIf="loading" class="loading-container"></mat-spinner>
-
-  <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
-  <ng-container *ngIf="movies.length > 0; else noResults">
-    <div class="row d-flex align-items-center justify-content-center gx-0 movie-list">
-      <app-movie-card class="col-2 mb-4" *ngFor="let movie of movies" [movie]="movie"></app-movie-card>
-    </div>
-  </ng-container>
-
-  <ng-template #noResults>
-    <p class="no-movies">No movies found. Try searching for another title.</p>
-  </ng-template>
-</div> -->
 
 <div class="container mx-auto px-4">
 
@@ -53,7 +27,9 @@
 
   <ng-container *ngIf="movies.length > 0; else noResults">
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 justify-center">
-      <app-movie-card *ngFor="let movie of movies" [movie]="movie"></app-movie-card>
+      <ng-container  *ngFor="let movie of movies">
+        <app-movie-card [movie]="movie"></app-movie-card>
+      </ng-container>
     </div>
   </ng-container>
 
