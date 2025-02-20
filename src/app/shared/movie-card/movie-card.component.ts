@@ -5,6 +5,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { Movie } from '../../core/models/movie.model';
 import { RemoveAfterColonPipe } from "../../core/pipes/remove-after-colon.pipe";
+import { Store } from '@ngrx/store';
+import { addMovie } from '../../store/watchlist/watchlist.acrion';
 
 @Component({
   selector: 'app-movie-card',
@@ -17,7 +19,13 @@ export class MovieCardComponent {
   @Input() movie!: Movie;
   @Output() watchList = new EventEmitter<void>();
 
+  constructor(
+    private store: Store
+  ){}
+
   addToWatchlist(): void {
-    this.watchList.emit();
+    if (this.movie) {
+      this.store.dispatch(addMovie({ movie: this.movie }));
+    }
   }
 }
