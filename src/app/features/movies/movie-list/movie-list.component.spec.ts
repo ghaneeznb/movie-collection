@@ -1,63 +1,81 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Store, StoreModule } from '@ngrx/store';
-import { of } from 'rxjs';
-import { provideMockStore, MockStore } from '@ngrx/store/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MovieListComponent } from './movie-list.component';
 import { MovieService } from '../../../core/services/movie.service';
-import { selectWatchlistMovies } from '../../../store/watchlist/watchlist.selector';
-import { addMovie, removeMovie } from '../../../store/watchlist/watchlist.acrion';
+import { of, throwError } from 'rxjs';
+import { Movie } from '../../../core/models/movie.model';
+import { MovieCardComponent } from '../../../shared/movie-card/movie-card.component';
+import { FormsModule } from '@angular/forms';
+import { NgFor, NgIf } from '@angular/common';
 
 describe('MovieListComponent', () => {
   let component: MovieListComponent;
   let fixture: ComponentFixture<MovieListComponent>;
-  let store: MockStore;
   let movieService: jasmine.SpyObj<MovieService>;
 
-  const mockMovies = [
-    { imdbID: '1', Title: 'Movie 1', Year: '2020', Type: 'movie', Poster: 'url1' },
-    { imdbID: '2', Title: 'Movie 2', Year: '2021', Type: 'movie', Poster: 'url2' }
+  const mockMovies: Movie[] = [
+    { imdbID: 'tt1234567', Title: 'Iron Man', Year: '2008',  Poster: 'ironman.jpg', Plot: 'A billionaire becomes Iron Man.', Ratings: [], Type: 'movie' },
+    { imdbID: 'tt2345678', Title: 'Thor', Year: '2011', Poster: 'thor.jpg', Plot: 'The God of Thunder.', Ratings: [], Type: 'movie' }
   ];
 
   beforeEach(async () => {
-    movieService = jasmine.createSpyObj('MovieService', ['getMovies']);
+    const movieServiceSpy = jasmine.createSpyObj('MovieService', ['getMovies']);
+
     await TestBed.configureTestingModule({
-      imports: [StoreModule.forRoot({}), HttpClientTestingModule],
+      imports: [MovieCardComponent, FormsModule, NgIf, NgFor],
       declarations: [MovieListComponent],
-      providers: [
-        provideMockStore({
-          selectors: [{ selector: selectWatchlistMovies, value: [] }],
-        }),
-        { provide: MovieService, useValue: movieService },
-      ],
+      providers: [{ provide: MovieService, useValue: movieServiceSpy }]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MovieListComponent);
     component = fixture.componentInstance;
-    store = TestBed.inject(MockStore);
+    movieService = TestBed.inject(MovieService) as jasmine.SpyObj<MovieService>;
+
+    movieService.getMovies.and.returnValue(of({ Search: mockMovies }));
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should fetch movies', () => {
-    movieService.getMovies.and.returnValue(of({ Search: mockMovies }));
-    component.query = 'Marvel';
-    component.fetchMovies();
+  it('should fetch movies on init', () => {
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    expect(movieService.getMovies).toHaveBeenCalledWith('Marvel');
     expect(component.movies.length).toBe(2);
+    expect(component.movies).toEqual(mockMovies);
+    expect(component.loading).toBeFalse();
   });
 
-  it('should add a movie to the watchlist', () => {
-    spyOn(store, 'dispatch');
-    const movie = mockMovies[0];
-    component.addToWatchlist(movie);
-    expect(store.dispatch).toHaveBeenCalledWith(addMovie({ movie }));
+  it('should not fetch movies if query is empty', () => {
+    component.query = ' ';
+    component.fetchMovies();
+
+    expect(movieService.getMovies).not.toHaveBeenCalled();
   });
 
-  it('should remove a movie from the watchlist', () => {
-    spyOn(store, 'dispatch');
-    component.removeFromWatchlist('1');
-    expect(store.dispatch).toHaveBeenCalledWith(removeMovie({ imdbID: '1' }));
+  it('should handle errors when fetching movies', () => {
+    movieService.getMovies.and.returnValue(throwError(() => new Error('API Error')));
+    
+    component.fetchMovies();
+    fixture.detectChanges();
+
+    expect(component.errorMessage).toBe('Failed to load movies. Please try again.');
+    expect(component.loading).toBeFalse();
+    expect(component.movies.length).toBe(0);
+  });
+
+  it('should set loading to true when fetching movies', () => {
+    component.fetchMovies();
+
+    expect(component.loading).toBeTrue();
+  });
+
+  it('should update movies list on successful fetch', () => {
+    component.fetchMovies();
+    fixture.detectChanges();
+
+    expect(component.movies.length).toBe(2);
+    expect(component.movies).toEqual(mockMovies);
   });
 });

@@ -18,7 +18,7 @@ import { Observable } from 'rxjs';
     NgIf,
     CommonModule,
     RemoveAfterColonPipe
-]
+  ]
 })
 export class MovieDetailComponent implements OnInit {
   movie!: Movie;
@@ -31,7 +31,7 @@ export class MovieDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private movieService: MovieService,
     private store: Store
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const imdbID = this.route.snapshot.paramMap.get('id');
@@ -55,7 +55,7 @@ export class MovieDetailComponent implements OnInit {
     });
   }
 
-  checkWatchlist(){
+  checkWatchlist() {
     this.watchlist$ = this.store.select(selectWatchlistMovies);
     this.watchlist$.subscribe((movies: Movie[]) => {
       this.moviesInWatchlist = movies;
@@ -68,7 +68,7 @@ export class MovieDetailComponent implements OnInit {
     if (this.isInWatchlist && imdbID) {
       this.removeFromWatchlist(imdbID);
     } else {
-      this.addToWatchlist() 
+      this.addToWatchlist()
     }
   }
 
@@ -77,7 +77,7 @@ export class MovieDetailComponent implements OnInit {
       this.store.dispatch(addMovie({ movie: this.movie }));
     }
   }
-  
+
   removeFromWatchlist(imdbID: string): void {
     this.store.dispatch(removeMovie({ imdbID }));
   }

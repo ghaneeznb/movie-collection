@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { WatchlistComponent } from './watchlist.component';
-import { Store, StoreModule } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
-import { selectWatchlistMovies } from '../../../store/watchlist/watchlist.selector';
-import { addMovie, removeMovie } from '../../../store/watchlist/watchlist.acrion';
 import { Movie } from '../../../core/models/movie.model';
+import { selectWatchlistMovies } from '../../../store/watchlist/watchlist.selector';
+import { removeMovie } from '../../../store/watchlist/watchlist.acrion';
 import { of } from 'rxjs';
 import { MovieCardComponent } from "../../../shared/movie-card/movie-card.component";
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
@@ -14,62 +14,48 @@ describe('WatchlistComponent', () => {
   let fixture: ComponentFixture<WatchlistComponent>;
   let store: MockStore;
 
-  const mockMovie: Movie = {
-    imdbID: '1',
-    Title: 'Test Movie',
-    Year: '2022',
-    Type: 'movie',
-    Poster: 'test-url'
-  };
+  const mockMovies: Movie[] = [
+    { imdbID: 'tt1234567', Title: 'Iron Man', Year: '2008', Poster: 'ironman.jpg', Plot: 'A billionaire becomes Iron Man.', Ratings: [], Type: 'movie' },
+    { imdbID: 'tt2345678', Title: 'Thor', Year: '2011', Poster: 'thor.jpg', Plot: 'The God of Thunder.', Ratings: [], Type: 'movie' }
+  ];
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [StoreModule.forRoot({}), NgIf, NgFor, AsyncPipe],
-      declarations: [WatchlistComponent, MovieCardComponent],
+      imports: [MovieCardComponent, NgIf, AsyncPipe, NgFor],
+      declarations: [WatchlistComponent],
       providers: [
         provideMockStore({
-          selectors: [{ selector: selectWatchlistMovies, value: [mockMovie] }],
-        }),
-      ],
+          selectors: [
+            { selector: selectWatchlistMovies, value: mockMovies }
+          ]
+        })
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(WatchlistComponent);
     component = fixture.componentInstance;
-    store = TestBed.inject(MockStore);
-
-    spyOn(store, 'select').and.returnValue(of([mockMovie]));
-    spyOn(store, 'dispatch');
-
+    store = TestBed.inject(Store) as MockStore;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should load movies from the store', () => {
-    component.watchlist$.subscribe((movies) => {
-      expect(movies.length).toBe(1);
-      expect(movies[0]).toEqual(mockMovie);
-    });
+  it('should select movies from store on init', () => {
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    expect(component.moviesInWatchlist.length).toBe(2);
+    expect(component.moviesInWatchlist).toEqual(mockMovies);
   });
 
-  it('should dispatch addMovie action when adding a movie', () => {
-    component.addToWatchlist(mockMovie);
-    expect(store.dispatch).toHaveBeenCalledWith(addMovie({ movie: mockMovie }));
-  });
+  it('should remove a movie from the watchlist', () => {
+    spyOn(store, 'dispatch');
 
-  it('should dispatch removeMovie action when removing a movie', () => {
-    component.removeFromWatchlist(mockMovie.imdbID);
-    expect(store.dispatch).toHaveBeenCalledWith(removeMovie({ imdbID: mockMovie.imdbID }));
-  });
+    const imdbID = 'tt1234567';
+    component.removeMovie(imdbID);
 
-  it('should return true if movie is in watchlist', () => {
-    expect(component.isInWatchlist(mockMovie)).toBeTrue();
-  });
-
-  it('should return false if movie is not in watchlist', () => {
-    const newMovie: Movie = { ...mockMovie, imdbID: '2' };
-    expect(component.isInWatchlist(newMovie)).toBeFalse();
+    expect(store.dispatch).toHaveBeenCalledWith(removeMovie({ imdbID }));
   });
 });

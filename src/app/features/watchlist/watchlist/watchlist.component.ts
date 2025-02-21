@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Movie } from '../../../core/models/movie.model';
 import { selectWatchlistMovies } from '../../../store/watchlist/watchlist.selector';
-import { addMovie, removeMovie } from '../../../store/watchlist/watchlist.acrion';
+import { removeMovie } from '../../../store/watchlist/watchlist.acrion';
 import { MovieCardComponent } from "../../../shared/movie-card/movie-card.component";
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 
@@ -23,7 +23,9 @@ export class WatchlistComponent implements OnInit {
   @Output() addToWatchlist = new EventEmitter<Movie>();
   @Output() removeFromWatchlist = new EventEmitter<string>();
 
-  constructor(private store: Store) {}
+  constructor(
+    private store: Store
+  ) {}
 
   ngOnInit(): void {
     this.watchlist$ = this.store.select(selectWatchlistMovies);
@@ -33,6 +35,6 @@ export class WatchlistComponent implements OnInit {
   }
 
   removeMovie(imdbID: string): void {
-    this.moviesInWatchlist = this.moviesInWatchlist.filter(movie => movie.imdbID !== imdbID);
+    this.store.dispatch(removeMovie({ imdbID }));
   }
 }

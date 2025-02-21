@@ -1,9 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
 import { Movie } from '../../../core/models/movie.model';
-import { addMovie, removeMovie } from '../../../store/watchlist/watchlist.acrion';
-import { selectWatchlistMovies } from '../../../store/watchlist/watchlist.selector';
 import { MovieService } from '../../../core/services/movie.service';
 import { MovieCardComponent } from '../../../shared/movie-card/movie-card.component';
 import { NgFor, NgIf } from '@angular/common';
@@ -22,7 +18,7 @@ export class MovieListComponent implements OnInit {
   loading: boolean = false;
   errorMessage: string = '';
 
-  constructor(private store: Store, private movieService: MovieService) {}
+  constructor(private movieService: MovieService) {}
 
   ngOnInit(): void {
     this.fetchMovies();
